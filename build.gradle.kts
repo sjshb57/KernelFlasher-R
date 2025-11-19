@@ -5,6 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
 }
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+tasks.register("clean", Delete::class) {
+    delete(rootProject.layout.buildDirectory)
 }

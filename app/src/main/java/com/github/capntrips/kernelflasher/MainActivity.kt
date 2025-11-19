@@ -50,7 +50,6 @@ import com.topjohnwu.superuser.nio.FileSystemManager
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.io.File
 
-
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalMaterial3Api

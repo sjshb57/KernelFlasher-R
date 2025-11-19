@@ -3,69 +3,85 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose.compiler)
 }
 
 android {
-    compileSdk 34
+    compileSdk = 36
+    namespace = "com.github.capntrips.kernelflasher"
 
     defaultConfig {
-        applicationId "com.github.capntrips.kernelflasher"
-        minSdk 29
-        targetSdk 34
-        versionCode 20
-        versionName "1.0.0-alpha20"
+        applicationId = "com.github.capntrips.kernelflasher"
+        minSdk = 29
+        targetSdk = 36
+        versionCode = 21
+        versionName = "1.0.0-alpha21"
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += [
-                    "room.schemaLocation": "$projectDir/schemas".toString(),
-                    "room.incremental": "true"
-                ]
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
             }
         }
+
         ndk {
             //noinspection ChromeOsAbiSupport
-            abiFilters = ['armeabi-v7a', 'arm64-v8a']
+            abiFilters.add("arm64-v8a")
         }
+
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
+        }
+
+        @Suppress("UnstableApiUsage")
+        androidResources {
+            @Suppress("DEPRECATION")
+            localeFilters += setOf("zh", "zh-rCN", "zh-rTW")
         }
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
+
     sourceSets {
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
+        getByName("main") {
+            jniLibs.srcDirs("src/main/jniLibs")
         }
     }
+
     buildFeatures {
-        aidl true
+        aidl = true
+        compose = true
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = '17'
+
+    kotlin {
+        jvmToolchain(21)
     }
-    buildFeatures {
-        compose true
-    }
+
+    @Suppress("UnstableApiUsage")
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
-    packagingOptions {
+
+    packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += setOf("/META-INF/{AL2.0,LGPL2.1}")
         }
         jniLibs {
-            useLegacyPackaging true
+            useLegacyPackaging = true
         }
     }
-    namespace 'com.github.capntrips.kernelflasher'
 }
 
 dependencies {
